@@ -3,7 +3,7 @@ import requests
 import time
 
 # API-ключ Leonardo
-api_key = "55dc569b-9dff-4bb7-88ed-d13f5a7e6469"
+api_key = ""
 authorization = "Bearer %s" % api_key
 
 # Заголовки для всех запросов к API
