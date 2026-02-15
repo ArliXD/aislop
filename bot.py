@@ -2,7 +2,7 @@ from config import *
 import telebot
 from logic import generate_image
 
-API_TOKEN = '8285421568:AAEQcdQwTLxyeHbpLFlirY0aIUrHKaItEGs'
+API_TOKEN = ''
 
 bot = telebot.TeleBot(API_TOKEN)
 
@@ -27,5 +27,6 @@ def gener_img(message):
         bot.send_photo(message.chat.id, image_url, caption = "Готово! Вот твое изображение и проваливай")
     except Exception as e:
         bot.reply_to(message, f'ХАХААХАХХ тут проблемка появилась. Фото не сгенерировалась: {e}')
+
 
 bot.infinity_polling()
