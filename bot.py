@@ -1,32 +1,38 @@
-from config import *
 import telebot
+import os
+import time
 from logic import generate_image
 
 API_TOKEN = ''
 
 bot = telebot.TeleBot(API_TOKEN)
 
-
-# Handle '/start' and '/help'
 @bot.message_handler(commands=['help', 'start'])
 def send_welcome(message):
-    bot.reply_to(message, """\
-Привет!
-Я бот, который будет генерировать изображения для каждого твоего сообщения( под каждым я имею ввиду абсолютно каждое )
-""")
+    bot.reply_to(
+        message,
+        """Привет! 🎨
+Я бот, который генерирует изображения для каждого твоего сообщения.
+Просто напиши мне, что ты хочешь увидеть, и я создам это для тебя!
+"""
+    )
 
-
-# Handle all other messages with content_type 'text' (content_types defaults to ['text'])
 @bot.message_handler(func=lambda message: True)
 def gener_img(message):
     try:
-        bot.reply_to(message, "🎨 Генерирую изображения, прошу подождать и набраться терпения... В противном случае, проваливайте отсюда.")
+        msg = bot.reply_to(message, "🎨 Генерирую изображение... Пожалуйста, подождите.")
+
         prompt = message.text
-        image_url = generate_image(prompt)
 
-        bot.send_photo(message.chat.id, image_url, caption = "Готово! Вот твое изображение и проваливай")
+        image_url = generate_image(prompt, filename="result.jpg")
+
+        bot.delete_message(message.chat.id, msg.message_id)
+
+        bot.send_photo(message.chat.id, open("result.jpg", "rb"), caption="Вот ваше изображение!")
+        
+        os.remove("result.jpg")
+
     except Exception as e:
-        bot.reply_to(message, f'ХАХААХАХХ тут проблемка появилась. Фото не сгенерировалась: {e}')
-
+        bot.reply_to(message, f"Произошла ошибка при генерации изображения: {e}")
 
 bot.infinity_polling()
